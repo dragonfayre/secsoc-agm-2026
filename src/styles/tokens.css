@@ -17,8 +17,10 @@
   --color-accent: #7f82e0;      /* periwinkle */
 
   /* ---- Type ---- */
-  --font-display: 'Fraunces', 'Fraunces', Arial, sans-serif;
-  --font-body: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', Arial, sans-serif;  /* primary display / headings */
+  --font-body: 'Outfit', 'Helvetica Neue', Arial, sans-serif; /* body copy */
+  --font-accent: 'Fraunces', Georgia, serif;                  /* accent / decorative serif */
+  --font-accent2: 'Borel', cursive;                           /* second accent — name2 */
 
   --text-xs: 0.75rem;     /* 12px */
   --text-sm: 0.875rem;    /* 14px */

@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './',
+  // Must match the GitHub repository name for Pages to resolve assets correctly.
+  base: '/secsoc-agm-2026/',
   build: {
     target: 'es2020',
     sourcemap: true,
+    outDir: 'dist',
   },
 });

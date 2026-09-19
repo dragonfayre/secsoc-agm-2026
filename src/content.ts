@@ -15,29 +15,40 @@ export interface SkillGroup {
   items: string[];
 }
 
+export interface RolePreference {
+  role: string;
+  subtitle: string;
+  body: string;
+}
+
 export interface Content {
   name: string;
+  name2: string;
   role: string;
   tagline: string;
   location: string;
   email: string;
+  discord: string;
   linkedin: string;
   github: string;
   heroIntroLines: string[];
   about: string;
   experience: ExperienceEntry[];
   skills: SkillGroup[];
+  rolePreferences: RolePreference[];
   contactLine: string;
 }
 
 export const content: Content = {
-  name: '[Full Name]',
-  role: '[Target Role]',
+  name: 'Alexander Liu',
+  name2: 'dragonfayre',
+  role: 'Security Society AGM 2026',
   tagline: 'Building [what you build] with [what you\u2019re known for].',
-  location: '[City, Country]',
-  email: '[email@example.com]',
-  linkedin: 'https://linkedin.com/in/[your-handle]',
-  github: 'https://github.com/[your-handle]',
+  location: 'SecSoc Conferences Subcomittee 2026',
+  email: 'alexl@unswsecurity.com',
+  discord: 'dragonfayre',
+  linkedin: 'https://linkedin.com/in/alexanderkangshao',
+  github: 'https://github.com/dragonfayre',
 
   heroIntroLines: ['Hi, I\u2019m', '[Full Name]'],
 
@@ -77,4 +88,22 @@ export const content: Content = {
   ],
 
   contactLine: '[Short line inviting outreach, e.g. "Open to backend and infrastructure roles \u2014 happy to talk."]',
+
+  rolePreferences: [
+    {
+      role: '[First Preference Role Name]',
+      subtitle: '[Role subtitle or team, e.g. "Platform Engineering · Full-time"]',
+      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+    },
+    {
+      role: '[Second Preference Role Name]',
+      subtitle: '[Role subtitle or team]',
+      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+    },
+    {
+      role: '[Third Preference Role Name]',
+      subtitle: '[Role subtitle or team]',
+      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+    },
+  ],
 };

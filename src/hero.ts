@@ -32,8 +32,12 @@ function drawWord(word: HTMLElement, delay: number): Promise<void> {
 export interface Hero {
   /** Plays the drawn-in intro, then the three-block wipe into the editorial state. */
   playIntro: () => Promise<void>;
-  /** Toggles the hero between full-bleed and a contained, inset panel. */
-  setShrunk: (shrunk: boolean) => void;
+  /**
+   * Toggles the hero between full-bleed and a contained, inset panel.
+   * Returns a Promise that resolves when the animation completes so callers
+   * can await it before triggering the next page transition.
+   */
+  setShrunk: (shrunk: boolean) => Promise<void>;
 }
 
 export function initHero(refs: HeroRefs): Hero {
@@ -66,7 +70,6 @@ export function initHero(refs: HeroRefs): Hero {
         delay: (_el: unknown, i = 0) => i * 90,
         ease: 'inOutQuad',
         onComplete: (self) => {
-          // Resolve once the last (most-delayed) block finishes.
           if (self.progress === 1) {
             refs.wipe.style.display = 'none';
             resolve();
@@ -76,18 +79,31 @@ export function initHero(refs: HeroRefs): Hero {
     });
   }
 
-  function setShrunk(shrunk: boolean): void {
+  function setShrunk(shrunk: boolean): Promise<void> {
     const margin = cssNumber('--hero-margin', 28);
     const radius = cssNumber('--radius-panel', 18);
 
-    animate(refs.stage, {
-      top: shrunk ? [0, margin] : [margin, 0],
-      right: shrunk ? [0, margin] : [margin, 0],
-      bottom: shrunk ? [0, margin] : [margin, 0],
-      left: shrunk ? [0, margin] : [margin, 0],
-      borderRadius: shrunk ? [0, radius] : [radius, 0],
-      duration: 850,
-      ease: 'inOutQuad',
+    if (prefersReducedMotion()) {
+      // Apply final state immediately and resolve.
+      refs.stage.style.top = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.right = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.bottom = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.left = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.borderRadius = shrunk ? `${radius}px` : '0px';
+      return Promise.resolve();
+    }
+
+    return new Promise<void>((resolve) => {
+      animate(refs.stage, {
+        top: shrunk ? [0, margin] : [margin, 0],
+        right: shrunk ? [0, margin] : [margin, 0],
+        bottom: shrunk ? [0, margin] : [margin, 0],
+        left: shrunk ? [0, margin] : [margin, 0],
+        borderRadius: shrunk ? [0, radius] : [radius, 0],
+        duration: 850,
+        ease: 'inOutQuad',
+        onComplete: () => resolve(),
+      });
     });
   }
 

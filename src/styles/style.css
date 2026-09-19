@@ -84,12 +84,18 @@ a:hover { color: var(--color-accent); }
   width: 100%;
   height: 100vh;
   position: relative;
+  background: var(--color-primary);
 }
 
 /* ---------- Page navigation dots ---------- */
+/*
+  Positioned inside the card's right padding area.
+  right: var(--hero-margin) places them flush with the card's outer right edge;
+  the card itself uses symmetric inset so the dots float just inside it.
+*/
 .page-nav {
   position: fixed;
-  right: clamp(1rem, 3vw, 2.5rem);
+  right: calc(var(--hero-margin) + 0.75rem);
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -117,8 +123,18 @@ a:hover { color: var(--color-accent); }
   transform: scale(1.3);
 }
 
+/* ---------- Content card ---------- */
+/* Symmetric inset — dots sit on top of the card's right padding via z-index */
+.content-card {
+  position: absolute;
+  inset: var(--hero-margin);
+  border-radius: var(--radius-panel);
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
 /* ---------- Hero ---------- */
-.page--hero { background: var(--color-bg-panel); }
+.page--hero { background: var(--color-primary); }
 
 .hero-stage {
   position: absolute;
@@ -136,13 +152,13 @@ a:hover { color: var(--color-accent); }
   justify-content: center;
   gap: var(--space-2);
   padding: var(--page-padding-inline);
+  /* After fade-out, stop blocking clicks on the editorial beneath */
+  pointer-events: none;
 }
-.hero-intro__line {
-  overflow: hidden;
-}
+.hero-intro__line { overflow: hidden; }
 .hero-intro__line-inner {
   display: block;
-  font-family: var(--font-display);
+  font-family: var(--font-accent);
   font-weight: 600;
   font-size: var(--text-4xl);
   line-height: var(--leading-tight);
@@ -160,7 +176,7 @@ a:hover { color: var(--color-accent); }
   inset: 0;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto;
   padding: var(--page-padding-inline);
   gap: var(--space-4);
 }
@@ -174,24 +190,37 @@ a:hover { color: var(--color-accent); }
 .hero-editorial__title {
   grid-column: 1 / 11;
   grid-row: 2;
-  align-self: center;
+  align-self: end;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--text-5xl);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
 }
+.hero-editorial__name2 {
+  grid-column: 1 / 11;
+  grid-row: 3;
+  align-self: start;
+  margin-top: calc(var(--space-2) * -1);
+  font-family: var(--font-accent2);
+  font-weight: 400;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-primary);
+}
 .hero-editorial__tagline {
   grid-column: 1 / 8;
-  grid-row: 3;
+  grid-row: 5;
   align-self: end;
+  font-family: var(--font-display);
   font-size: var(--text-md);
   color: var(--color-text-muted);
   max-width: 34ch;
 }
 .hero-editorial__meta {
   grid-column: 9 / 13;
-  grid-row: 3;
+  grid-row: 5;
   align-self: end;
   justify-self: end;
   display: flex;
@@ -200,6 +229,9 @@ a:hover { color: var(--color-accent); }
   text-align: right;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+  /* Ensure meta sits above the (now pointer-events:none) intro layer */
+  position: relative;
+  z-index: 3;
 }
 .hero-editorial__meta a { color: var(--color-text); }
 .hero-editorial__meta a:hover { color: var(--color-accent); }
@@ -217,21 +249,29 @@ a:hover { color: var(--color-accent); }
   transform: translateY(0%);
 }
 
-/* ---------- Section shell shared by non-hero pages ---------- */
+/* ---------- Section shell ---------- */
+/*
+  .section fills the content-card and uses flex column.
+  Children that should not grow use flex-shrink: 0.
+  The last flex child (content area / tabbed) gets flex: 1 to fill remaining space.
+*/
 .section {
   position: absolute;
   inset: 0;
   padding: var(--page-padding-inline);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  overflow: hidden; /* children handle their own scroll */
 }
 .section__eyebrow {
+  flex-shrink: 0;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-3);
+  margin-top: auto; /* push eyebrow+heading to vertical centre */
 }
 .section__heading {
+  flex-shrink: 0;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--text-3xl);
@@ -241,43 +281,108 @@ a:hover { color: var(--color-accent); }
   max-width: 16ch;
   white-space: pre-line;
 }
-
-/* About */
-.about__layout {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-8);
-  max-width: 76rem;
+/* Spacer after heading keeps bottom content from pushing into the margin */
+.section::after {
+  content: '';
+  flex-shrink: 0;
+  display: block;
+  margin-top: auto;
 }
-.about__label { grid-column: 1 / 4; }
+
+/* ---------- Tabbed sub-page selector ---------- */
+.tabbed {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* Cancel the ::after auto-margin so tabbed fills properly */
+  margin-bottom: 0;
+}
+/* When a .tabbed is present, remove the ::after spacer */
+.section:has(.tabbed)::after { display: none; }
+/* Also remove top auto-margin from eyebrow so layout is top-aligned for tabbed cards */
+.section:has(.tabbed) .section__eyebrow { margin-top: 0; }
+
+.tabbed__strip {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.tabbed__tab {
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  border: 1px solid var(--color-bg-raised);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+.tabbed__tab:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+.tabbed__tab--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+.tabbed__panels {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.tabbed__panel { padding-bottom: var(--space-6); }
+
+/* ---------- About ---------- */
+/*
+  Heading lives outside the grid as .section__heading (flex sibling).
+  .about__layout is the two-column grid: label col | body col.
+  flex-shrink: 0 prevents it squashing; overflow-y: auto handles overflow.
+*/
+.about__layout {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-8);
+  overflow-y: auto;
+}
+/* Cancel the centering spacers for about — content is self-contained */
+.page--about .section__eyebrow { margin-top: 0; }
+.page--about .section::after { display: none; }
+.page--about .section { justify-content: center; }
+
+.about__label {
+  /* heading already rendered here as section__heading, this div is empty; keep for spacing */
+}
 .about__body {
-  grid-column: 4 / 10;
   font-size: var(--text-lg);
   line-height: var(--leading-snug);
   color: var(--color-text);
   max-width: 62ch;
+  align-self: center;
 }
 
-/* Experience */
-.experience__list {
-  max-width: 60rem;
-  display: flex;
-  flex-direction: column;
-}
+/* ---------- Experience ---------- */
 .experience__item {
   display: grid;
   grid-template-columns: minmax(0, 8rem) 1fr;
   gap: var(--space-8);
-  padding: var(--space-8) 0;
-  border-top: 1px solid var(--color-bg-raised);
+  padding: var(--space-5) 0;
 }
-.experience__item:last-child { border-bottom: 1px solid var(--color-bg-raised); }
+.experience__item:last-child { padding-bottom: 0; }
 .experience__period {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+  padding-top: var(--space-1);
 }
 .experience__role {
-  font-family: var(--font-display);
+  font-family: var(--font-accent);
   font-weight: 600;
   font-size: var(--text-xl);
   margin-bottom: var(--space-1);
@@ -301,13 +406,7 @@ a:hover { color: var(--color-accent); }
   background: var(--color-accent);
 }
 
-/* Skills */
-.skills__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-12);
-  max-width: 70rem;
-}
+/* ---------- Skills ---------- */
 .skills__category-label {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
@@ -321,7 +420,111 @@ a:hover { color: var(--color-accent); }
   border-bottom: 1px solid var(--color-bg-raised);
 }
 
-/* Contact */
+/* ---------- Role Preferences ---------- */
+/*
+  Vertical layout: numbered sidebar (left) + content area (right).
+  The content area uses a CSS carousel: all panels stack in a column
+  inside an overflow:hidden container; the active panel is scrolled into
+  view via translateY on the inner track.
+*/
+.role-pref__layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  gap: var(--space-8);
+}
+.role-pref__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border-right: 1px solid var(--color-bg-raised);
+  padding-right: var(--space-6);
+  overflow-y: auto;
+}
+.role-pref__sidebar-item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--space-2);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+  width: 100%;
+}
+.role-pref__sidebar-item:hover { color: var(--color-text); }
+.role-pref__sidebar-item--active {
+  background: var(--color-bg-raised);
+  color: var(--color-text);
+}
+.role-pref__sidebar-number {
+  font-family: var(--font-accent);
+  font-size: var(--text-lg);
+  color: var(--color-primary);
+  min-width: 1.5ch;
+  flex-shrink: 0;
+}
+.role-pref__sidebar-label {
+  line-height: var(--leading-snug);
+}
+
+/* Carousel container — clips the sliding track */
+.role-pref__carousel {
+  overflow: hidden;
+  position: relative;
+}
+/* Inner track — all panels laid out vertically; shifted by JS */
+.role-pref__carousel-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--duration-medium) var(--ease-standard);
+  will-change: transform;
+}
+.role-pref__panel {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+  /* Each panel is exactly as tall as the carousel container */
+  height: 100%;
+  overflow-y: auto;
+}
+.role-pref__ordinal {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+.role-pref__role {
+  font-family: var(--font-accent);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+.role-pref__subtitle {
+  font-size: var(--text-md);
+  color: var(--color-accent);
+}
+.role-pref__body {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+  max-width: 52ch;
+}
+/* Cancel section centering for role-pref — tabbed-like layout */
+.page--role-preferences .section:has(.role-pref__layout)::after { display: none; }
+.page--role-preferences .section__eyebrow { margin-top: 0; }
+
+/* ---------- Contact ---------- */
 .contact__intro {
   font-size: var(--text-lg);
   color: var(--color-text-muted);
@@ -335,37 +538,72 @@ a:hover { color: var(--color-accent); }
   letter-spacing: var(--tracking-tight);
   display: inline-block;
   margin-bottom: var(--space-8);
+  color: var(--color-text);
 }
+.contact__email:hover { color: var(--color-primary); }
 .contact__links {
   display: flex;
   gap: var(--space-8);
   font-size: var(--text-md);
   color: var(--color-text-muted);
+  align-items: baseline;
+}
+.contact__discord-inline {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+.contact__discord-label {
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.contact__discord-inline:hover .contact__discord-label {
+  color: var(--color-accent);
+}
+.contact__discord-handle {
+  /* inherits font-body from .contact__links — same as LinkedIn / GitHub */
+  color: var(--color-text);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.contact__discord-handle:hover {
+  color: var(--color-primary);
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .hero-editorial__title { grid-column: 1 / 13; }
-  .hero-editorial__tagline { grid-column: 1 / 13; grid-row: 3; }
+  .hero-editorial__name2 { grid-column: 1 / 13; grid-row: 3; }
+  .hero-editorial__tagline { grid-column: 1 / 13; grid-row: 5; }
   .hero-editorial__meta {
     grid-column: 1 / 13;
-    grid-row: 4;
+    grid-row: 6;
     align-self: end;
     justify-self: start;
     text-align: left;
   }
-  .hero-editorial__grid { grid-template-rows: auto 1fr auto auto; }
+  .hero-editorial__grid { grid-template-rows: auto auto auto 1fr auto auto; }
 
-  .about__label, .about__body { grid-column: 1 / 13; }
-  .about__label { margin-bottom: var(--space-2); }
+  .about__layout { grid-template-columns: 1fr; }
+  .about__body { align-self: start; }
 
   .experience__item { grid-template-columns: 1fr; gap: var(--space-2); }
 
-  .skills__grid { grid-template-columns: 1fr; gap: var(--space-8); }
+  .role-pref__layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .role-pref__sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--color-bg-raised);
+    padding-right: 0;
+    padding-bottom: var(--space-3);
+    overflow-y: visible;
+    overflow-x: auto;
+  }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .loader__dot, .loader__smiley { transition: none; }
+  .role-pref__carousel-track { transition: none; }
   * { scroll-behavior: auto !important; }
 }

@@ -22,9 +22,12 @@ async function bootstrap(): Promise<void> {
     pages,
     nav: navRoot,
     onBeforeTransition: (from, to) => {
-      // The hero shrinks into a contained panel only on the hero <-> about boundary.
-      if (from === 0 && to === 1) hero.setShrunk(true);
-      if (from === 1 && to === 0) hero.setShrunk(false);
+      // Leaving the hero to any page → shrink first, then scroll.
+      if (from === 0 && to > 0) return hero.setShrunk(true);
+    },
+    onAfterTransition: (from, to) => {
+      // Returning to the hero from any page → scroll first, then zoom back in.
+      if (to === 0 && from > 0) return hero.setShrunk(false);
     },
   });
 
