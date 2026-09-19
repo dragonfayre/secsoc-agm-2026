@@ -44,61 +44,68 @@ export const content: Content = {
   name2: 'dragonfayre',
   role: 'Security Society AGM 2026',
   tagline: 'Building [what you build] with [what you\u2019re known for].',
-  location: 'SecSoc Conferences Subcomittee 2026',
+  location: 'SecSoc Conferences Subcommittee 2026',
   email: 'alexl@unswsecurity.com',
   discord: 'dragonfayre',
   linkedin: 'https://linkedin.com/in/alexanderkangshao',
   github: 'https://github.com/dragonfayre',
 
-  heroIntroLines: ['Hi, I\u2019m', '[Full Name]'],
+  heroIntroLines: ['Hi, I\u2019m', 'Alexander Liu'],
 
   about:
-    'I\u2019m a [role, e.g. \u201cbackend engineer\u201d] focused on [area, e.g. \u201cdistributed systems and developer tooling\u201d]. ' +
-    'Over the past [X years], I\u2019ve worked on [one concrete thread, e.g. \u201cpayment infrastructure that processes millions of transactions daily\u201d]. ' +
-    'I care most about [a genuine working principle, e.g. \u201csystems that fail predictably and are easy to reason about at 3am\u201d].',
+    'Nice to meet you, my name is Alex! ' +
+    'I am currently completing my first year in the Bachelor of Cybersecurity, ' +
+    'and I\u2019m on the Conferences Subcommittee for SecSoc 2026 :)',
 
   experience: [
     {
-      role: '[Job Title]',
-      company: '[Company]',
-      period: '[Start]\u2013[End]',
-      bullets: [
-        '[Quantified outcome, e.g. "Cut checkout latency 40% by redesigning the payment retry path"]',
-        '[Scope or ownership, e.g. "Owned the migration of 12 services to a shared event bus"]',
-      ],
+      role: 'Conferences Subcommittee',
+      company: 'Security Society UNSW',
+      period: '2026',
+      bullets: ['[Placeholder \u2014 what you did or achieved here.]'],
     },
     {
-      role: '[Job Title]',
-      company: '[Company]',
-      period: '[Start]\u2013[End]',
-      bullets: ['[Outcome]', '[Outcome]'],
+      role: 'Casual Academic \u2013 1511 | 1911',
+      company: 'School of Computer Science & Engineering',
+      period: '2026',
+      bullets: ['[Placeholder \u2014 what you did or achieved here.]'],
     },
     {
-      role: '[Job Title]',
-      company: '[Company]',
-      period: '[Start]\u2013[End]',
-      bullets: ['[Outcome]'],
+      role: 'Co-Founder & Mentor',
+      company: 'NBHS Programming Club',
+      period: '2024\u20132025',
+      bullets: ['[Placeholder \u2014 what you did or achieved here.]'],
+    },
+    {
+      role: 'Student Liaison',
+      company: 'NBHS Prefects',
+      period: '2024\u20132025',
+      bullets: ['[Placeholder \u2014 what you did or achieved here.]'],
     },
   ],
 
   skills: [
     { category: 'Languages', items: ['[e.g. TypeScript]', '[e.g. Go]', '[e.g. Python]'] },
-    { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },  
+    { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },
     { category: 'Focus areas', items: ['[e.g. Distributed systems]', '[e.g. API design]', '[e.g. Performance]'] },
   ],
 
-  contactLine: '[Short line inviting outreach, e.g. "Open to backend and infrastructure roles \u2014 happy to talk."]',
+  contactLine: 'Connect with me & say hi!',
 
   rolePreferences: [
     {
-      role: '[First Preference Role Name]',
-      subtitle: '[Role subtitle or team, e.g. "Platform Engineering · Full-time"]',
-      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+      role: 'GEDI Officer',
+      subtitle: 'Diversity & Inclusion for all (+ being a Discord Mod)',
+      body:
+        'Basically, I want to keep SecSoc a happy space for everyone :3 ' +
+        'errrrr... yeh',
     },
     {
-      role: '[Second Preference Role Name]',
-      subtitle: '[Role subtitle or team]',
-      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+      role: 'Vice President - Externals',
+      subtitle: 'Connecting SecSoc with the worlddd (but maybe uni first..)',
+      body:
+        'Lowkey just want to keep Arc & SecEdu happy so that we can do all the cool ' +
+        'shi AHEM i mean stuff. I GOT YALL frrrr',
     },
     {
       role: '[Third Preference Role Name]',

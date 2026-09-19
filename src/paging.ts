@@ -112,26 +112,4 @@ export function initPaging(opts: PagingOptions): Paging {
   );
   window.addEventListener(
     'touchend',
-    (e) => {
-      if (locked) return;
-      const delta = touchStartY - e.changedTouches[0].clientY;
-      if (delta > TOUCH_THRESHOLD) void goTo(index + 1);
-      else if (delta < -TOUCH_THRESHOLD) void goTo(index - 1);
-    },
-    { passive: true },
-  );
-
-  // ---- Keyboard ----
-  window.addEventListener('keydown', (e) => {
-    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
-      e.preventDefault();
-      void goTo(index + 1);
-    } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
-      e.preventDefault();
-      void goTo(index - 1);
-    }
-  });
-
-  updateNav();
-  return { goTo: (i) => void goTo(i) };
-}
+    (e) =
