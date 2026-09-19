@@ -22,11 +22,11 @@ async function bootstrap(): Promise<void> {
     pages,
     nav: navRoot,
     onBeforeTransition: (from, to) => {
-      // Leaving the hero to any page → shrink first, then scroll.
+      // Leaving the hero to any page: shrink first, then scroll.
       if (from === 0 && to > 0) return hero.setShrunk(true);
     },
     onAfterTransition: (from, to) => {
-      // Returning to the hero from any page → scroll first, then zoom back in.
+      // Returning to the hero from any page: scroll first, then zoom back in.
       if (to === 0 && from > 0) return hero.setShrunk(false);
     },
   });

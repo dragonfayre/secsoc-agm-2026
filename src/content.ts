@@ -83,7 +83,7 @@ export const content: Content = {
 
   skills: [
     { category: 'Languages', items: ['[e.g. TypeScript]', '[e.g. Go]', '[e.g. Python]'] },
-    { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },
+    { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },  
     { category: 'Focus areas', items: ['[e.g. Distributed systems]', '[e.g. API design]', '[e.g. Performance]'] },
   ],
 
