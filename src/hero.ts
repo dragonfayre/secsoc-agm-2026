@@ -88,3 +88,24 @@ export function initHero(refs: HeroRefs): Hero {
       refs.stage.style.top = shrunk ? `${margin}px` : '0px';
       refs.stage.style.right = shrunk ? `${margin}px` : '0px';
       refs.stage.style.bottom = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.left = shrunk ? `${margin}px` : '0px';
+      refs.stage.style.borderRadius = shrunk ? `${radius}px` : '0px';
+      return Promise.resolve();
+    }
+
+    return new Promise<void>((resolve) => {
+      animate(refs.stage, {
+        top: shrunk ? [0, margin] : [margin, 0],
+        right: shrunk ? [0, margin] : [margin, 0],
+        bottom: shrunk ? [0, margin] : [margin, 0],
+        left: shrunk ? [0, margin] : [margin, 0],
+        borderRadius: shrunk ? [0, radius] : [radius, 0],
+        duration: 850,
+        ease: 'inOutQuad',
+        onComplete: () => resolve(),
+      });
+    });
+  }
+
+  return { playIntro, setShrunk };
+}

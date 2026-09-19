@@ -87,4 +87,30 @@ export const content: Content = {
   skills: [
     { category: 'Languages', items: ['[e.g. TypeScript]', '[e.g. Go]', '[e.g. Python]'] },
     { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },
-    { category: 'Focus areas', items: ['[e.g. Distributed systems]', '[e.
+    { category: 'Focus areas', items: ['[e.g. Distributed systems]', '[e.g. API design]', '[e.g. Performance]'] },
+  ],
+
+  contactLine: 'Connect with me & say hi!',
+
+  rolePreferences: [
+    {
+      role: 'GEDI Officer',
+      subtitle: 'Diversity & Inclusion for all (+ being a Discord Mod)',
+      body:
+        'Basically, I want to keep SecSoc a happy space for everyone :3 ' +
+        'errrrr... yeh',
+    },
+    {
+      role: 'Vice President - Externals',
+      subtitle: 'Connecting SecSoc with the worlddd (but maybe uni first..)',
+      body:
+        'Lowkey just want to keep Arc & SecEdu happy so that we can do all the cool ' +
+        'shi AHEM i mean stuff. I GOT YALL frrrr',
+    },
+    {
+      role: '[Third Preference Role Name]',
+      subtitle: '[Role subtitle or team]',
+      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+    },
+  ],
+};

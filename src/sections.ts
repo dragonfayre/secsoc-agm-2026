@@ -184,4 +184,198 @@ function buildExperiencePanel(entry: Content['experience'][number]): HTMLElement
   details.appendChild(el('p', 'experience__company', entry.company));
   const bullets = el('ul', 'experience__bullets');
   entry.bullets.forEach((b) => bullets.appendChild(el('li', undefined, b)));
-  d
+  details.appendChild(bullets);
+  item.append(period, details);
+  panel.appendChild(item);
+  return panel;
+}
+
+function buildExperience(content: Content): HTMLElement {
+  const page = el('section', 'page page--experience');
+  page.dataset.index = '2';
+
+  const section = el('div', 'section');
+  section.appendChild(el('p', 'section__eyebrow', 'Experience'));
+  section.appendChild(el('h2', 'section__heading', 'Where I\u2019ve\nworked'));
+
+  const tabs = content.experience.map((entry) => ({
+    label: entry.company || entry.role,
+    panel: buildExperiencePanel(entry),
+  }));
+
+  section.appendChild(buildTabbedSection(tabs));
+  page.appendChild(buildCard(section));
+  return page;
+}
+
+// ─── Skills ──────────────────────────────────────────────────────────────────
+
+function buildSkillsPanel(group: Content['skills'][number]): HTMLElement {
+  const panel = el('div');
+  const col = el('div');
+  col.appendChild(el('p', 'skills__category-label', group.category));
+  const items = el('ul', 'skills__items');
+  group.items.forEach((i) => items.appendChild(el('li', undefined, i)));
+  col.appendChild(items);
+  panel.appendChild(col);
+  return panel;
+}
+
+function buildSkills(content: Content): HTMLElement {
+  const page = el('section', 'page page--skills');
+  page.dataset.index = '3';
+
+  const section = el('div', 'section');
+  section.appendChild(el('p', 'section__eyebrow', 'Skills'));
+  section.appendChild(el('h2', 'section__heading', 'What I\nwork with'));
+
+  const tabs = content.skills.map((group) => ({
+    label: group.category,
+    panel: buildSkillsPanel(group),
+  }));
+
+  section.appendChild(buildTabbedSection(tabs));
+  page.appendChild(buildCard(section));
+  return page;
+}
+
+// ─── Role Preferences ────────────────────────────────────────────────────────
+
+const ORDINALS = [
+  'First', 'Second', 'Third', 'Fourth', 'Fifth',
+  'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth',
+];
+
+function buildRolePreferences(content: Content): HTMLElement {
+  const page = el('section', 'page page--role-preferences');
+  page.dataset.index = '4';
+
+  const section = el('div', 'section');
+  section.appendChild(el('p', 'section__eyebrow', 'Role Preferences'));
+  section.appendChild(el('h2', 'section__heading', 'Where I\nwant to go'));
+
+  const layout = el('div', 'role-pref__layout');
+  const sidebar = el('div', 'role-pref__sidebar');
+
+  // Carousel: clipping container + sliding track
+  const carousel = el('div', 'role-pref__carousel');
+  const track = el('div', 'role-pref__carousel-track');
+  carousel.appendChild(track);
+
+  let activeIndex = 0;
+
+  function showPanel(next: number): void {
+    activeIndex = next;
+    // Shift by exact pixel offset — percentage is relative to track height, not panel height
+    const h = carousel.clientHeight;
+    track.style.transform = `translateY(-${next * h}px)`;
+    sidebarItems.forEach((item, j) =>
+      item.classList.toggle('role-pref__sidebar-item--active', j === next),
+    );
+  }
+
+  // Build panels — each fills the carousel height via CSS
+  content.rolePreferences.forEach((pref, i) => {
+    const panel = el('div', 'role-pref__panel');
+    const ordinal = ORDINALS[i] ?? `#${i + 1}`;
+    panel.appendChild(el('p', 'role-pref__ordinal', `${ordinal} Preference`));
+    panel.appendChild(el('h3', 'role-pref__role', pref.role));
+    panel.appendChild(el('p', 'role-pref__subtitle', pref.subtitle));
+    panel.appendChild(el('p', 'role-pref__body', pref.body));
+    track.appendChild(panel);
+  });
+
+  // Build sidebar items
+  const sidebarItems = content.rolePreferences.map((pref, i) => {
+    const ordinal = ORDINALS[i] ?? `#${i + 1}`;
+    const btn = el('button', 'role-pref__sidebar-item');
+    btn.type = 'button';
+    btn.append(
+      el('span', 'role-pref__sidebar-number', String(i + 1)),
+      el('span', 'role-pref__sidebar-label', pref.role || `${ordinal} Preference`),
+    );
+    if (i === 0) btn.classList.add('role-pref__sidebar-item--active');
+    btn.addEventListener('click', () => showPanel(i));
+    sidebar.appendChild(btn);
+    return btn;
+  });
+
+  // Size the carousel track panels to match the carousel container height
+  // We do this after mount via ResizeObserver
+  const ro = new ResizeObserver(() => {
+    const h = carousel.clientHeight;
+    if (h === 0) return;
+    track.querySelectorAll<HTMLElement>('.role-pref__panel').forEach((p) => {
+      p.style.height = `${h}px`;
+    });
+    // Re-apply using px so the offset stays correct after resize
+    track.style.transform = `translateY(-${activeIndex * h}px)`;
+  });
+  ro.observe(carousel);
+
+  layout.append(sidebar, carousel);
+  section.appendChild(layout);
+  page.appendChild(buildCard(section));
+  return page;
+}
+
+// ─── Contact ─────────────────────────────────────────────────────────────────
+
+function buildContact(content: Content): HTMLElement {
+  const page = el('section', 'page page--contact');
+  page.dataset.index = '5';
+
+  const section = el('div', 'section');
+  section.appendChild(el('p', 'section__eyebrow', 'Contact'));
+  section.appendChild(el('h2', 'section__heading', 'Let\u2019s\ntalk'));
+  section.appendChild(el('p', 'contact__intro', content.contactLine));
+
+  const emailLink = el('a', 'contact__email', content.email);
+  emailLink.href = `mailto:${content.email}`;
+  section.appendChild(emailLink);
+
+  // Social links row: LinkedIn · GitHub · discord: dragonfayre
+  const links = el('div', 'contact__links');
+
+  const linkedinLink = el('a', undefined, 'LinkedIn');
+  linkedinLink.href = content.linkedin;
+  linkedinLink.target = '_blank';
+  linkedinLink.rel = 'noreferrer';
+
+  const githubLink = el('a', undefined, 'GitHub');
+  githubLink.href = content.github;
+  githubLink.target = '_blank';
+  githubLink.rel = 'noreferrer';
+
+  // Discord as inline text item (not a link — just a handle)
+  const discordItem = el('span', 'contact__discord-inline');
+  discordItem.appendChild(el('span', 'contact__discord-label', 'discord:\u00A0'));
+  discordItem.appendChild(el('span', 'contact__discord-handle', content.discord));
+
+  links.append(linkedinLink, githubLink, discordItem);
+  section.appendChild(links);
+
+  page.appendChild(buildCard(section));
+  return page;
+}
+
+// ─── App entry ───────────────────────────────────────────────────────────────
+
+export function renderApp(content: Content, mount: HTMLElement): RenderResult {
+  const track = el('div', 'pager__track');
+  track.id = 'pager-track';
+
+  const { page: heroPage, refs: heroRefs } = buildHero(content);
+  const pages = [
+    heroPage,
+    buildAbout(content),
+    buildExperience(content),
+    buildSkills(content),
+    buildRolePreferences(content),
+    buildContact(content),
+  ];
+  pages.forEach((p) => track.appendChild(p));
+  mount.appendChild(track);
+
+  return { track, pages, hero: heroRefs };
+}
