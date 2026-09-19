@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Full Name] — [Target Role]</title>
+  <meta name="description" content="[Full Name], [Target Role]" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/src/styles/tokens.css" />
+  <link rel="stylesheet" href="/src/styles/style.css" />
+</head>
+<body>
+  <!-- Loader: three dots -> drop -> smiley -> CRT blip-out -->
+  <div id="loader" class="loader" role="status" aria-label="Loading">
+    <div class="loader__stage">
+      <div class="loader__dots" id="loader-dots">
+        <span class="loader__dot" data-dot="left"></span>
+        <span class="loader__dot" data-dot="mid"></span>
+        <span class="loader__dot" data-dot="right"></span>
+      </div>
+      <svg
+        id="loader-smiley"
+        class="loader__smiley"
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="32" cy="32" r="14" fill="var(--color-text)" />
+        <circle class="loader__smiley-eye" cx="26" cy="28" r="2" fill="var(--color-bg)" />
+        <circle class="loader__smiley-eye" cx="38" cy="28" r="2" fill="var(--color-bg)" />
+        <path
+          class="loader__smiley-mouth"
+          d="M 24 36 Q 32 42 40 36"
+          stroke="var(--color-bg)"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          fill="none"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <!-- App shell: populated by sections.ts from content.ts -->
+  <main id="app" class="app" hidden>
+    <div class="pager" id="pager"></div>
+    <nav class="page-nav" id="page-nav" aria-label="Section navigation"></nav>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
