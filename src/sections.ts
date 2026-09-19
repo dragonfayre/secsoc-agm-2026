@@ -196,7 +196,7 @@ function buildExperience(content: Content): HTMLElement {
 
   const section = el('div', 'section');
   section.appendChild(el('p', 'section__eyebrow', 'Experience'));
-  section.appendChild(el('h2', 'section__heading', 'Where I\u2019ve\nworked'));
+  section.appendChild(el('h2', 'section__heading', '~the dreaded~ MyExperience'));
 
   const tabs = content.experience.map((entry) => ({
     label: entry.company || entry.role,
@@ -252,7 +252,7 @@ function buildRolePreferences(content: Content): HTMLElement {
 
   const section = el('div', 'section');
   section.appendChild(el('p', 'section__eyebrow', 'Role Preferences'));
-  section.appendChild(el('h2', 'section__heading', 'Where I\nwant to go'));
+  section.appendChild(el('h2', 'section__heading', 'What can I do for SecSoc?'));
 
   const layout = el('div', 'role-pref__layout');
   const sidebar = el('div', 'role-pref__sidebar');
@@ -292,7 +292,7 @@ function buildRolePreferences(content: Content): HTMLElement {
     btn.type = 'button';
     btn.append(
       el('span', 'role-pref__sidebar-number', String(i + 1)),
-      el('span', 'role-pref__sidebar-label', pref.role || `${ordinal} Preference`),
+      el('span', 'role-pref__sidebar-label', pref.roleshort || `${ordinal} Preference`),
     );
     if (i === 0) btn.classList.add('role-pref__sidebar-item--active');
     btn.addEventListener('click', () => showPanel(i));
@@ -327,7 +327,7 @@ function buildContact(content: Content): HTMLElement {
 
   const section = el('div', 'section');
   section.appendChild(el('p', 'section__eyebrow', 'Contact'));
-  section.appendChild(el('h2', 'section__heading', 'Let\u2019s\ntalk'));
+  section.appendChild(el('h2', 'section__heading', 'LinkedIn Maxxing section'));
   section.appendChild(el('p', 'contact__intro', content.contactLine));
 
   const emailLink = el('a', 'contact__email', content.email);

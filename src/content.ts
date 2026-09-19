@@ -17,6 +17,7 @@ export interface SkillGroup {
 
 export interface RolePreference {
   role: string;
+  roleshort: string;
   subtitle: string;
   body: string;
 }
@@ -43,7 +44,7 @@ export const content: Content = {
   name: 'Alexander Liu',
   name2: 'dragonfayre',
   role: 'Security Society AGM 2026',
-  tagline: 'Building [what you build] with [what you\u2019re known for].',
+  tagline: 'bottom text',
   location: 'SecSoc Conferences Subcommittee 2026',
   email: 'alexl@unswsecurity.com',
   discord: 'dragonfayre',
@@ -85,9 +86,9 @@ export const content: Content = {
   ],
 
   skills: [
-    { category: 'Languages', items: ['[e.g. TypeScript]', '[e.g. Go]', '[e.g. Python]'] },
-    { category: 'Tools & platforms', items: ['[e.g. AWS]', '[e.g. Postgres]', '[e.g. Kubernetes]'] },
-    { category: 'Focus areas', items: ['[e.g. Distributed systems]', '[e.g. API design]', '[e.g. Performance]'] },
+    { category: 'Fun Facts', items: ['I can make trumpet noises with my mouth :P', 'I started playing my violin again!', 'I have perfect pitch... yeah I ran out of fun ones sorry'] },
+    { category: 'Hobbies', items: ['Composing music :O', 'Playing Ultimate Frisbee (LOOKING FOR TEAM!!!) & Badminton', 'Gaming. we shall leave it at that'] },
+    { category: 'Interests', items: ['MUSICCC - despite having to uninstall spotify cuz i ran out of space', 'eating *yummy* food', 'hanging out w friendoss (or meetting new friendos!)'] },
   ],
 
   contactLine: 'Connect with me & say hi!',
@@ -95,6 +96,7 @@ export const content: Content = {
   rolePreferences: [
     {
       role: 'GEDI Officer',
+      roleshort: 'GEDI',
       subtitle: 'Diversity & Inclusion for all (+ being a Discord Mod)',
       body:
         'Basically, I want to keep SecSoc a happy space for everyone :3 ' +
@@ -102,15 +104,17 @@ export const content: Content = {
     },
     {
       role: 'Vice President - Externals',
+      roleshort: 'VP Externals',
       subtitle: 'Connecting SecSoc with the worlddd (but maybe uni first..)',
       body:
         'Lowkey just want to keep Arc & SecEdu happy so that we can do all the cool ' +
         'shi AHEM i mean stuff. I GOT YALL frrrr',
     },
     {
-      role: '[Third Preference Role Name]',
-      subtitle: '[Role subtitle or team]',
-      body: '[Describe why this role appeals to you, what you would bring, and what you hope to achieve in it.]',
+      role: 'President',
+      roleshort: 'Pres',
+      subtitle: 'hear me out',
+      body: 'actually nvm',
     },
   ],
 };
