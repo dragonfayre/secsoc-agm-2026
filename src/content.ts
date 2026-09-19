@@ -43,8 +43,8 @@ export interface Content {
 export const content: Content = {
   name: 'Alexander Liu',
   name2: 'dragonfayre',
-  role: 'Security Society AGM 2026 - Warning: Mobile Layout is COOKED sorry',
-  tagline: 'bottom text',
+  role: 'Security Society AGM 2026',
+  tagline: 'bottom text - Mobile Layout is COOKED sorry',
   location: 'SecSoc Conferences Subcommittee 2026',
   email: 'alexl@unswsecurity.com',
   discord: 'dragonfayre',
