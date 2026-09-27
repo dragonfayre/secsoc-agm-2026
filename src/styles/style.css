@@ -89,9 +89,8 @@ a:hover { color: var(--color-accent); }
 
 /* ---------- Page navigation dots ---------- */
 /*
-  Positioned inside the card's right padding area.
-  right: var(--hero-margin) places them flush with the card's outer right edge;
-  the card itself uses symmetric inset so the dots float just inside it.
+  .page-nav__item is a flex row: [label chip] [dot]
+  On hover (with 1s delay), the label chip expands from the left.
 */
 .page-nav {
   position: fixed;
@@ -103,7 +102,53 @@ a:hover { color: var(--color-accent); }
   gap: var(--space-3);
   z-index: 50;
 }
+.page-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  /* Overflow hidden clips the label during its width transition */
+  overflow: visible;
+}
+/* Label chip — collapsed by default, expands left on item hover */
+.page-nav__label {
+  display: block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-raised);
+  padding: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  /* Instant collapse when mouse leaves */
+  transition:
+    max-width 150ms var(--ease-standard) 0s,
+    opacity 120ms var(--ease-standard) 0s,
+    padding 150ms var(--ease-standard) 0s;
+}
+.page-nav__item:hover .page-nav__label {
+  max-width: 12rem;
+  opacity: 1;
+  padding: 3px 10px;
+  /* 1s delay before expanding on hover-in */
+  transition:
+    max-width 220ms var(--ease-standard) 0.3s,
+    opacity 180ms var(--ease-standard) 0.3s,
+    padding 220ms var(--ease-standard) 0.3s;
+}
+/* Re-apply the 1s delay only on hover-in */
+.page-nav__item:hover .page-nav__label {
+  transition:
+    max-width 220ms var(--ease-standard) 0.3s,
+    opacity 180ms var(--ease-standard) 0.3s,
+    padding 220ms var(--ease-standard) 0.3s;
+}
 .page-nav__dot {
+  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;

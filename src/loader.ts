@@ -4,7 +4,6 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-
 export function runLoader(): Promise<void> {
   return new Promise((resolve) => {
     const loader = document.getElementById('loader');
@@ -23,11 +22,11 @@ export function runLoader(): Promise<void> {
 
     const finish = () => {
       loader.style.display = 'none';
-      resolve();
     };
 
     if (prefersReducedMotion()) {
       finish();
+      resolve();
       return;
     }
 
@@ -55,11 +54,11 @@ export function runLoader(): Promise<void> {
                   duration: 320,
                   ease: 'outBounce',
                   onComplete: () => {
-                    // 3. Middle dot drops down (original drop).
+                    // 3. Middle dot drops down — no return bounce, stays dropped.
                     animate(midDot, {
-                      translateY: [0, 16, 0],
-                      duration: 420,
-                      ease: 'outBounce',
+                      translateY: 16,
+                      duration: 260,
+                      ease: 'inQuad',
                       onComplete: () => {
                         // 4. Side dots retire, middle dot morphs into smiley.
                         animate([leftDot, rightDot], {
@@ -88,6 +87,7 @@ export function runLoader(): Promise<void> {
                                     duration: 130,
                                     ease: 'inExpo',
                                     onComplete: () => {
+                                      resolve();
                                       animate(loader, {
                                         opacity: [1, 0],
                                         duration: 180,

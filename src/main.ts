@@ -4,6 +4,16 @@ import { runLoader } from './loader';
 import { initHero } from './hero';
 import { initPaging } from './paging';
 
+// Eyebrow labels match the section eyebrows in sections.ts, one per page.
+const PAGE_LABELS = [
+  'hero',
+  'about',
+  'experience',
+  'more about',
+  'Role Preferences',
+  'contact me :)',
+];
+
 async function bootstrap(): Promise<void> {
   const appRoot = document.getElementById('app');
   const navRoot = document.getElementById('page-nav');
@@ -15,12 +25,16 @@ async function bootstrap(): Promise<void> {
   // Loader plays first; the app underneath is fully built but hidden.
   await runLoader();
 
+  // Unhide app and start the wipe immediately as the loader begins fading out.
+  // The wipe blocks cover the dark stage so there is no flash.
   appRoot.hidden = false;
+  void hero.playIntro();
 
   initPaging({
     track,
     pages,
     nav: navRoot,
+    labels: PAGE_LABELS,
     onBeforeTransition: (from, to) => {
       // Leaving the hero to any page: shrink first, then scroll.
       if (from === 0 && to > 0) return hero.setShrunk(true);
@@ -30,9 +44,6 @@ async function bootstrap(): Promise<void> {
       if (to === 0 && from > 0) return hero.setShrunk(false);
     },
   });
-
-  // Kick off the drawn-in intro once the app is visible.
-  void hero.playIntro();
 }
 
 bootstrap();

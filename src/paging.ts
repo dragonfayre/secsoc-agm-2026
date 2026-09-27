@@ -5,15 +5,18 @@ export interface PagingOptions {
   pages: HTMLElement[];
   nav: HTMLElement;
   /**
+   * Optional eyebrow label for each page, shown on dot hover.
+   * Index matches the pages array.
+   */
+  labels?: string[];
+  /**
    * Called just before the page slide begins.
-   * Return a Promise to delay the slide until the animation resolves
-   * (e.g. hero shrink before scrolling away from it).
+   * Return a Promise to delay the slide until the animation resolves.
    */
   onBeforeTransition?: (from: number, to: number) => Promise<void> | void;
   /**
    * Called just after the page slide completes.
-   * Return a Promise if you want the lock held until it resolves
-   * (e.g. hero unshrink after scrolling back to it).
+   * Return a Promise if you want the lock held until it resolves.
    */
   onAfterTransition?: (from: number, to: number) => Promise<void> | void;
 }
@@ -36,12 +39,29 @@ export function initPaging(opts: PagingOptions): Paging {
   let locked = false;
 
   const dots = pages.map((_, i) => {
+    const label = opts.labels?.[i] ?? '';
+
+    // Wrapper holds both the dot and the label chip, enabling the hover expand.
+    const wrapper = document.createElement('div');
+    wrapper.className = 'page-nav__item';
+
+    // Label chip — expands from the left on hover
+    if (label) {
+      const chip = document.createElement('span');
+      chip.className = 'page-nav__label';
+      chip.textContent = label;
+      chip.setAttribute('aria-hidden', 'true');
+      wrapper.appendChild(chip);
+    }
+
     const btn = document.createElement('button');
     btn.className = 'page-nav__dot';
     btn.type = 'button';
-    btn.setAttribute('aria-label', `Go to section ${i + 1}`);
+    btn.setAttribute('aria-label', `Go to section ${i + 1}${label ? ': ' + label : ''}`);
     btn.addEventListener('click', () => void goTo(i));
-    nav.appendChild(btn);
+    wrapper.appendChild(btn);
+
+    nav.appendChild(wrapper);
     return btn;
   });
 
