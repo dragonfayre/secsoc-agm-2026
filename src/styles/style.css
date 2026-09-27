@@ -30,7 +30,7 @@ a:hover { color: var(--color-accent); }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg);
+  background: var(--color-bg-panel);
   z-index: 200;
 }
 .loader__stage {

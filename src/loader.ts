@@ -4,9 +4,6 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function cssVar(name: string): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
 
 export function runLoader(): Promise<void> {
   return new Promise((resolve) => {
@@ -34,16 +31,7 @@ export function runLoader(): Promise<void> {
       return;
     }
 
-    const bgColor = cssVar('--color-bg');
-    const bgPanel = cssVar('--color-bg-panel');
-
-    // 1. Dots fade + scale in, simultaneously fade loader bg from bg to bg-panel.
-    animate(loader, {
-      backgroundColor: [bgColor, bgPanel],
-      duration: 900,
-      ease: 'outQuad',
-    });
-
+    // 1. Dots fade + scale in.
     animate(dots, {
       opacity: [0, 1],
       scale: [0.4, 1],
