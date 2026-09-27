@@ -4,21 +4,21 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/**
- * Runs the loading sequence and resolves once the loader has been removed
- * from view. Sequence: three dots fade in -> middle dot drops -> the dots
- * cross-fade into a small smiley -> the whole cluster does a retro CRT
- * "power off" collapse (vertical, then horizontal, then gone).
- */
+function cssVar(name: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 export function runLoader(): Promise<void> {
   return new Promise((resolve) => {
     const loader = document.getElementById('loader');
     const stage = document.querySelector<HTMLElement>('.loader__stage');
     const dots = Array.from(document.querySelectorAll<HTMLElement>('.loader__dot'));
     const midDot = document.querySelector<HTMLElement>('[data-dot="mid"]');
+    const leftDot = document.querySelector<HTMLElement>('[data-dot="left"]');
+    const rightDot = document.querySelector<HTMLElement>('[data-dot="right"]');
     const smiley = document.getElementById('loader-smiley');
 
-    if (!loader || !stage || !midDot || !smiley || dots.length !== 3) {
+    if (!loader || !stage || !midDot || !leftDot || !rightDot || !smiley || dots.length !== 3) {
       loader?.remove();
       resolve();
       return;
@@ -34,9 +34,16 @@ export function runLoader(): Promise<void> {
       return;
     }
 
-    const [leftDot, , rightDot] = dots;
+    const bgColor = cssVar('--color-bg');
+    const bgPanel = cssVar('--color-bg-panel');
 
-    // 1. Dots fade + scale in.
+    // 1. Dots fade + scale in, simultaneously fade loader bg from bg to bg-panel.
+    animate(loader, {
+      backgroundColor: [bgColor, bgPanel],
+      duration: 900,
+      ease: 'outQuad',
+    });
+
     animate(dots, {
       opacity: [0, 1],
       scale: [0.4, 1],
@@ -44,50 +51,72 @@ export function runLoader(): Promise<void> {
       delay: (_el: unknown, i = 0) => i * 90,
       ease: 'outQuad',
       onComplete: () => {
-        // 2. Middle dot drops and settles.
-        animate(midDot, {
-          translateY: [0, 16, 0],
-          duration: 420,
+        // 2. Sequential bounce-up: left, then mid, then right.
+        animate(leftDot, {
+          translateY: [0, -18, 0],
+          duration: 320,
           ease: 'outBounce',
           onComplete: () => {
-            // 3. Side dots retire, middle dot morphs into the smiley.
-            animate([leftDot, rightDot], {
-              opacity: 0,
-              scale: 0.4,
-              duration: 200,
-              ease: 'inQuad',
-            });
-            animate(midDot, { opacity: 0, duration: 140, ease: 'inQuad' });
-            animate(smiley, {
-              opacity: [0, 1],
-              scale: [0.5, 1],
-              duration: 260,
-              ease: 'outBack',
+            animate(midDot, {
+              translateY: [0, -18, 0],
+              duration: 320,
+              ease: 'outBounce',
               onComplete: () => {
-                // 4. Hold briefly, then retro CRT blip-out on the whole cluster.
-                window.setTimeout(() => {
-                  animate(stage, {
-                    scaleY: [1, 0.05],
-                    duration: 150,
-                    ease: 'inExpo',
-                    onComplete: () => {
-                      animate(stage, {
-                        scaleX: [1, 0],
-                        opacity: [1, 0],
-                        duration: 130,
-                        ease: 'inExpo',
-                        onComplete: () => {
-                          animate(loader, {
-                            opacity: [1, 0],
-                            duration: 180,
-                            ease: 'outQuad',
-                            onComplete: finish,
-                          });
-                        },
-                      });
-                    },
-                  });
-                }, 360);
+                animate(rightDot, {
+                  translateY: [0, -18, 0],
+                  duration: 320,
+                  ease: 'outBounce',
+                  onComplete: () => {
+                    // 3. Middle dot drops down (original drop).
+                    animate(midDot, {
+                      translateY: [0, 16, 0],
+                      duration: 420,
+                      ease: 'outBounce',
+                      onComplete: () => {
+                        // 4. Side dots retire, middle dot morphs into smiley.
+                        animate([leftDot, rightDot], {
+                          opacity: 0,
+                          scale: 0.4,
+                          duration: 200,
+                          ease: 'inQuad',
+                        });
+                        animate(midDot, { opacity: 0, duration: 140, ease: 'inQuad' });
+                        animate(smiley, {
+                          opacity: [0, 1],
+                          scale: [0.5, 1],
+                          duration: 260,
+                          ease: 'outBack',
+                          onComplete: () => {
+                            // 5. Hold briefly, then CRT blip-out.
+                            window.setTimeout(() => {
+                              animate(stage, {
+                                scaleY: [1, 0.05],
+                                duration: 150,
+                                ease: 'inExpo',
+                                onComplete: () => {
+                                  animate(stage, {
+                                    scaleX: [1, 0],
+                                    opacity: [1, 0],
+                                    duration: 130,
+                                    ease: 'inExpo',
+                                    onComplete: () => {
+                                      animate(loader, {
+                                        opacity: [1, 0],
+                                        duration: 180,
+                                        ease: 'outQuad',
+                                        onComplete: finish,
+                                      });
+                                    },
+                                  });
+                                },
+                              });
+                            }, 360);
+                          },
+                        });
+                      },
+                    });
+                  },
+                });
               },
             });
           },

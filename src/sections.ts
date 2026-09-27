@@ -1,4 +1,9 @@
 import type { Content } from './content';
+import imgAlex from './img/candidate_alex.png';
+import imgWorkshop from './img/workshop.png';
+import imgPicture from './img/picture.png';
+import imgConferences from './img/conferences.png';
+import imgLiveReaction from './img/live_reaction.PNG';
 
 export interface HeroRefs {
   stage: HTMLElement;
@@ -157,16 +162,22 @@ function buildAbout(content: Content): HTMLElement {
   page.dataset.index = '1';
 
   const section = el('div', 'section');
-  section.appendChild(el('p', 'section__eyebrow', 'About'));
-  // Heading is a direct flex child of section — outside the two-col grid
-  section.appendChild(el('h2', 'section__heading', 'A little\nbackground'));
+  section.appendChild(el('p', 'section__eyebrow', 'about'));
 
-  // Two-column layout: left col is intentionally empty (heading already above),
-  // right col holds the body. Using a simple flex row keeps them from overlapping.
   const layout = el('div', 'about__layout');
-  // Left placeholder keeps visual alignment with the 12-col feel
-  layout.appendChild(el('div', 'about__label'));
-  layout.appendChild(el('p', 'about__body', content.about));
+
+  // Left col: photo
+  const photo = el('img', 'about__photo');
+  (photo as HTMLImageElement).src = imgAlex;
+  (photo as HTMLImageElement).alt = 'Alex';
+  layout.appendChild(photo);
+
+  // Right col: heading + body + body2
+  const textCol = el('div', 'about__text');
+  textCol.appendChild(el('h2', 'section__heading', 'A little\nbackground'));
+  textCol.appendChild(el('p', 'about__body', content.about));
+  textCol.appendChild(el('p', 'about__body2', 'plspls use desktop view BUT if you mustt on mobile, use landscape mode tankyu'));
+  layout.appendChild(textCol);
 
   section.appendChild(layout);
   page.appendChild(buildCard(section));
@@ -195,8 +206,13 @@ function buildExperience(content: Content): HTMLElement {
   page.dataset.index = '2';
 
   const section = el('div', 'section');
-  section.appendChild(el('p', 'section__eyebrow', 'Experience'));
+  section.appendChild(el('p', 'section__eyebrow', 'experience'));
   section.appendChild(el('h2', 'section__heading', '~the dreaded~ MyExperience'));
+
+  const cardPhoto = el('img', 'card__photo card__photo--right');
+  (cardPhoto as HTMLImageElement).src = imgWorkshop;
+  (cardPhoto as HTMLImageElement).alt = 'workshop';
+  section.appendChild(cardPhoto);
 
   const tabs = content.experience.map((entry) => ({
     label: entry.company || entry.role,
@@ -226,8 +242,13 @@ function buildSkills(content: Content): HTMLElement {
   page.dataset.index = '3';
 
   const section = el('div', 'section');
-  section.appendChild(el('p', 'section__eyebrow', 'Skills'));
-  section.appendChild(el('h2', 'section__heading', 'What I\nwork with'));
+  section.appendChild(el('p', 'section__eyebrow', 'more about'));
+  section.appendChild(el('h2', 'section__heading', 'A.. more \nbackground'));
+
+  const cardPhoto = el('img', 'card__photo card__photo--right');
+  (cardPhoto as HTMLImageElement).src = imgPicture;
+  (cardPhoto as HTMLImageElement).alt = 'picture';
+  section.appendChild(cardPhoto);
 
   const tabs = content.skills.map((group) => ({
     label: group.category,
@@ -253,6 +274,11 @@ function buildRolePreferences(content: Content): HTMLElement {
   const section = el('div', 'section');
   section.appendChild(el('p', 'section__eyebrow', 'Role Preferences'));
   section.appendChild(el('h2', 'section__heading', 'What can I do for SecSoc?'));
+
+  const cardPhoto = el('img', 'card__photo card__photo--right');
+  (cardPhoto as HTMLImageElement).src = imgConferences;
+  (cardPhoto as HTMLImageElement).alt = 'conferences';
+  section.appendChild(cardPhoto);
 
   const layout = el('div', 'role-pref__layout');
   const sidebar = el('div', 'role-pref__sidebar');
@@ -326,7 +352,7 @@ function buildContact(content: Content): HTMLElement {
   page.dataset.index = '5';
 
   const section = el('div', 'section');
-  section.appendChild(el('p', 'section__eyebrow', 'Contact'));
+  section.appendChild(el('p', 'section__eyebrow', 'contact me :)'));
   section.appendChild(el('h2', 'section__heading', 'LinkedIn Maxxing section'));
   section.appendChild(el('p', 'contact__intro', content.contactLine));
 
@@ -334,26 +360,40 @@ function buildContact(content: Content): HTMLElement {
   emailLink.href = `mailto:${content.email}`;
   section.appendChild(emailLink);
 
-  // Social links row: LinkedIn · GitHub · discord: dragonfayre
+  // Social links row
   const links = el('div', 'contact__links');
 
-  const linkedinLink = el('a', undefined, 'LinkedIn');
+  // LinkedIn item
+  const linkedinItem = el('span', 'contact__discord-inline');
+  linkedinItem.appendChild(el('span', 'contact__discord-label', 'LinkedIn:\u00A0'));
+  const linkedinLink = el('a', 'contact__discord-handle', 'linkedin.com/in/alexanderkangshao');
   linkedinLink.href = content.linkedin;
   linkedinLink.target = '_blank';
   linkedinLink.rel = 'noreferrer';
+  linkedinItem.appendChild(linkedinLink);
 
-  const githubLink = el('a', undefined, 'GitHub');
+  // GitHub item
+  const githubItem = el('span', 'contact__discord-inline');
+  githubItem.appendChild(el('span', 'contact__discord-label', 'GitHub:\u00A0'));
+  const githubLink = el('a', 'contact__discord-handle', 'dragonfayre');
   githubLink.href = content.github;
   githubLink.target = '_blank';
   githubLink.rel = 'noreferrer';
+  githubItem.appendChild(githubLink);
 
-  // Discord as inline text item (not a link — just a handle)
+  // Discord item (inline text, no link)
   const discordItem = el('span', 'contact__discord-inline');
   discordItem.appendChild(el('span', 'contact__discord-label', 'discord:\u00A0'));
   discordItem.appendChild(el('span', 'contact__discord-handle', content.discord));
 
-  links.append(linkedinLink, githubLink, discordItem);
+  links.append(linkedinItem, githubItem, discordItem);
   section.appendChild(links);
+
+  // Decorative photo
+  const cardPhoto = el('img', 'card__photo card__photo--right');
+  (cardPhoto as HTMLImageElement).src = imgLiveReaction;
+  (cardPhoto as HTMLImageElement).alt = 'live reaction';
+  section.appendChild(cardPhoto);
 
   page.appendChild(buildCard(section));
   return page;
